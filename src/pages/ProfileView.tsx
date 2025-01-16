@@ -11,9 +11,7 @@ const ProfileView = () => {
   const [avatar, setAvatar] = useState<string>("");
   const [name, setName] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-
   const navigate = useNavigate();
-
   const handleCopyClick = () => {
     setCopyStatus(true);
     setTimeout(() => setCopyStatus(false), 2000);
