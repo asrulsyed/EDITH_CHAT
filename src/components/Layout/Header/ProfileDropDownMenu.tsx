@@ -31,12 +31,8 @@ const ProfileDropDownMenu = () => {
     const fetchProfile = async () => {
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/profile`,
-          {
-            headers: {
-              "ngrok-skip-browser-warning": "1"
-            }
-          }
+          `${import.meta.env.VITE_BACKEND_URL}/auth/profile`
+          
         )
         console.log("aaa", res);
         setName(res.data.name)

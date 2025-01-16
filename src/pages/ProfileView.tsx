@@ -38,7 +38,6 @@ const ProfileView = () => {
         {
           name,
           avatar,
-          referralCode,
         }
       )
       toast({
@@ -63,12 +62,8 @@ const ProfileView = () => {
     const fetchInviteCode = async () => {
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/profile`,
-          {
-            headers: {
-              "ngrok-skip-browser-warning": "1"
-            }
-          }
+          `${import.meta.env.VITE_BACKEND_URL}/auth/profile`
+          
         )
         setReferralCode(res.data.inviteCode)
         setName(res.data.name)

@@ -105,12 +105,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     }
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/chat/sessions`,
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "1"
-          }
-        }
+        `${import.meta.env.VITE_BACKEND_URL}/api/chat/sessions`
       )
       const reversedData = [...res.data].reverse();
       setHistory(reversedData.map((session: any) => ({
@@ -135,12 +130,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const showChats = async (sessionId: string | null) => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/chat/session/${sessionId}`,
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "1"
-          }
-        }
+        `${import.meta.env.VITE_BACKEND_URL}/api/chat/session/${sessionId}`
       )
       setSessionId(sessionId);
       setChatLog(res.data.chats);
