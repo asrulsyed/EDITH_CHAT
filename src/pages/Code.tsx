@@ -32,7 +32,6 @@ const Code = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
   axios.defaults.headers.common['token'] = token;
-  axios.defaults.withCredentials = true;
 
   const onSubmit = async (code: CodeProps) => {
     setIsLoading(true);
