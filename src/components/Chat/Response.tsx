@@ -1,8 +1,8 @@
 import { FiCopy } from "react-icons/fi";
 import React from "react";
 import { CodeBlock } from "react-code-block";
-import Markdown from "markdown-to-jsx";
 import moment from 'moment'
+import MarkdownIt from 'markdown-it'
 
 interface MessagePart {
   type: "text" | "code";
@@ -12,6 +12,12 @@ interface MessagePart {
 }
 
 const Response = ({ response, timestamp }: { response: string, timestamp: string | null }) => {
+  const md = new MarkdownIt({
+    html: true,
+    linkify: true,
+    typographer: true,
+  });
+
   const splitResponse = (content: string): MessagePart[] => {
     let isInCodeBlock: boolean = false;
     let currentPart: MessagePart = {
@@ -30,7 +36,9 @@ const Response = ({ response, timestamp }: { response: string, timestamp: string
           // Beginning of a code block
           isInCodeBlock = true;
           parts.push(currentPart);
-          const language = line.slice(3).trim().toLowerCase(); // Get the language
+          let language = line.slice(3).trim().toLowerCase(); // Get the language
+
+          language = language === "csharp" ? "cpp" : language;
           currentPart = {
             type: "code",
             content: "",
@@ -63,7 +71,7 @@ const Response = ({ response, timestamp }: { response: string, timestamp: string
         {splitResponse(response).map((part, index) => (
           <React.Fragment key={index}>
             {part.type === "text" && (
-              <Markdown className="break-words">{part.content}</Markdown>
+              <div className="break-words answer-markdown" dangerouslySetInnerHTML={{ __html: md.render(part.content) }}></div>
             )}
             {part.type === "code" && (
               <div className="relative">
@@ -77,7 +85,7 @@ const Response = ({ response, timestamp }: { response: string, timestamp: string
                   code={part.content}
                   language={part.language || "Text"}
                 >
-                  <CodeBlock.Code className="flex flex-col p-10 my-6 overflow-x-hidden transition-all duration-200 ease-in bg-gray-900 shadow-lg hover:overflow-x-auto scroll-smooth rounded-xl">
+                  <CodeBlock.Code className="flex flex-col p-10 my-6 overflow-x-hidden transition-all duration-200 ease-in bg-gray-900/70 shadow-lg hover:overflow-x-auto scroll-smooth rounded-xl whitespace-pre-wrap">
                     <CodeBlock.LineContent>
                       <CodeBlock.Token />
                     </CodeBlock.LineContent>
