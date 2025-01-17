@@ -28,8 +28,12 @@ const ProfileView = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setAvatar(imageUrl);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setAvatar(base64String);
+      }
+      reader.readAsDataURL(file);
     }
   };
 
@@ -40,7 +44,7 @@ const ProfileView = () => {
         {
           name,
           avatar,
-        }
+        },
       )
       setUser({ ...user, name, avatar });
       toast({

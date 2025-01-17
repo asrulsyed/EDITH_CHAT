@@ -20,6 +20,7 @@ const ProfileDropDownMenu = () => {
 
   const handleLogout = () => {
     logout();
+    navigate("/auth/login");
   }
 
   return (
@@ -27,9 +28,9 @@ const ProfileDropDownMenu = () => {
       <DropdownMenuTrigger className="p-0 transition-all duration-200 ease-in border-none rounded-full hover:scale-105 focus:outline-none bg-transparent">
         {
           user?.avatar ? (
-            <img src={user?.avatar} alt="avatar" className="h-[60px] w-[60px] rounded-full" />
+            <img src={user?.avatar} alt="avatar" className="h-[46px] w-[46px] rounded-full" />
           ) : (
-            <div className="h-[60px] w-[60px] rounded-full bg-gradient-to-br from-[#7D2DFF] to-[#41DDFF] flex items-center justify-center"></div>
+            <div className="h-[50px] w-[50px] rounded-full bg-gradient-to-br from-[#7D2DFF] to-[#41DDFF] flex items-center justify-center"></div>
           )
         }
       </DropdownMenuTrigger>

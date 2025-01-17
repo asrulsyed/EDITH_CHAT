@@ -32,6 +32,7 @@ const MobileDropDownMenu = () => {
 
   const handleLogout = () => {
     logout();
+    navigate("/auth/login");
   }
 
   const handleItemClick = (itemId: string) => {

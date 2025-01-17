@@ -31,6 +31,7 @@ const Code = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
   axios.defaults.headers.common['token'] = token;
+  axios.defaults.withCredentials = true;
 
   const onSubmit = async (code: CodeProps) => {
     setIsLoading(true);
@@ -43,11 +44,19 @@ const Code = () => {
       setLogined(true);
       navigate("/chat/text");
     } catch (error) {
-      console.error("Registration error:", error);
-      toast({
-        variant: "destructive",
-        description: "Invalid code",
-      });
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.message || 'Invalid verification code';
+        toast({
+          variant: "destructive",
+          description: errorMessage,
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          description: "An unexpected error occurred. Please try again.",
+        });
+      }
+      console.error("Verification error:", error);
     } finally {
       setIsLoading(false);
     }
