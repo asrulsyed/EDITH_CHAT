@@ -8,14 +8,11 @@ import {
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu";
 import { FiLogOut, FiSettings } from "react-icons/fi";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const ProfileDropDownMenu = () => {
 const { logout, user } = useAuth();
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleSetting = () => {
     navigate("/user/setting");
@@ -26,7 +23,7 @@ const { logout, user } = useAuth();
   }
 
   return (
-    <DropdownMenu onOpenChange={setIsOpen}>
+    <DropdownMenu>
       <DropdownMenuTrigger className="p-0 transition-all duration-200 ease-in border-none rounded-full hover:scale-105 focus:outline-none">
         <div className="h-[46px] w-[46px] rounded-full bg-gradient-to-br from-[#7D2DFF] to-[#41DDFF] flex items-center justify-center"></div>
       </DropdownMenuTrigger>

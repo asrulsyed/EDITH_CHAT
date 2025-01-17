@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { MdCheck, MdOutlineContentCopy } from "react-icons/md";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import axios from "axios";
@@ -9,7 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 const ProfileView = () => {
   const { user, setUser } = useAuth();
 
-  const [referralCode, setReferralCode] = useState<string>(user?.inviteCode || "");
+  
   const [copyStatus, setCopyStatus] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<string>(user?.avatar || "");
   const [name, setName] = useState<string>(user?.name || "");
@@ -124,7 +124,7 @@ const ProfileView = () => {
                 value={user?.inviteCode}
                 disabled
               />
-              <CopyToClipboard text={referralCode} onCopy={handleCopyClick}>
+              <CopyToClipboard text={user?.inviteCode || ""} onCopy={handleCopyClick}>
                 <button
                   className="absolute right-[1px] h-[calc(100%-2px)] -translate-y-1/2 bg-[#000000] top-1/2 focus:outline-none px-3 border-none group"
                   onClick={handleCopyClick}
