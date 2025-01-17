@@ -13,10 +13,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const ProfileDropDownMenu = () => {
-  const { logout } = useAuth();
+const { logout, user } = useAuth();
   const navigate = useNavigate();
-  const [name, setName] = useState<string | null>(null);
-  const [email, setEmail] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleSetting = () => {
@@ -26,23 +24,6 @@ const ProfileDropDownMenu = () => {
   const handleLogout = () => {
     logout();
   }
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/profile`
-          
-        )
-        console.log("aaa", res);
-        setName(res.data.name)
-        setEmail(res.data.email)
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    fetchProfile();
-  }, [isOpen]);
 
   return (
     <DropdownMenu onOpenChange={setIsOpen}>
@@ -56,8 +37,8 @@ const ProfileDropDownMenu = () => {
         <DropdownMenuLabel className="flex items-center justify-between">
         <div className="h-[46px] w-[46px] rounded-full bg-gradient-to-br from-[#7D2DFF] to-[#41DDFF] flex items-center justify-center"></div>
           <div className="ml-2.5 flex-1">
-            <p className="text-base font-semibold">{name}</p>
-            <p className="text-base font-normal text-[#FFFFFF]/80">{email}</p>
+            <p className="text-base font-semibold">{user?.name}</p>
+            <p className="text-base font-normal text-[#FFFFFF]/80">{user?.destination}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-[#FFFFFF]/10 my-4" />

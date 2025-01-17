@@ -15,6 +15,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/auth/profile`
+          
+        )
+        console.log("aaa", res);
+        setUser(res.data)
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchProfile();
     // const verifyToken = async () => {
     //   try {
     //     const res = await axios.post(
@@ -29,7 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     //   }
     // }
-  }, []);
+  }, [logined]);
 
   const login = async (data: LoginProps) => {
     try {
@@ -116,6 +129,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         signup,
         handleSocialLogin,
         user,
+        setUser,
         getUser,
         logout
       }}

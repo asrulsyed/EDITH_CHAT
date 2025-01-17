@@ -4,12 +4,15 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import axios from "axios";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const ProfileView = () => {
-  const [referralCode, setReferralCode] = useState<string>("");
+  const { user, setUser } = useAuth();
+
+  const [referralCode, setReferralCode] = useState<string>(user?.inviteCode || "");
   const [copyStatus, setCopyStatus] = useState<boolean>(false);
-  const [avatar, setAvatar] = useState<string>("");
-  const [name, setName] = useState<string>("");
+  const [avatar, setAvatar] = useState<string>(user?.avatar || "");
+  const [name, setName] = useState<string>(user?.name || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const handleCopyClick = () => {
@@ -38,6 +41,7 @@ const ProfileView = () => {
           avatar,
         }
       )
+      setUser({ ...user, name, avatar });
       toast({
         variant: "default",
         title: "Update Success",
@@ -56,22 +60,22 @@ const ProfileView = () => {
     navigate(-1);
   }
 
-  useEffect(() => {
-    const fetchInviteCode = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/profile`
+  // useEffect(() => {
+  //   const fetchInviteCode = async () => {
+  //     try {
+  //       const res = await axios.get(
+  //         `${import.meta.env.VITE_BACKEND_URL}/auth/profile`
           
-        )
-        setReferralCode(res.data.inviteCode)
-        setName(res.data.name)
-        setAvatar(res.data.avatar);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    fetchInviteCode();
-  }, []);
+  //       )
+  //       setReferralCode(res.data.inviteCode)
+  //       setName(res.data.name)
+  //       setAvatar(res.data.avatar);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   }
+  //   fetchInviteCode();
+  // }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#000000] font-Sofia text-[#E2E2E2]">
@@ -79,12 +83,12 @@ const ProfileView = () => {
         <h1 className="text-2xl font-medium text-left font-Sofia text-[#FFFFFF] ml-1">Profile</h1>
         <div className="flex items-center justify-between">
           {
-            avatar
-              ? <img src={avatar} alt="Profile" className="h-[90px] w-[90px] rounded-full object-cover" />
+            user?.avatar
+              ? <img src={user.avatar} alt="Profile" className="h-[90px] w-[90px] rounded-full object-cover" />
               : <div className="h-[90px] w-[90px] rounded-full bg-gradient-to-br from-[#7D2DFF] to-[#41DDFF] flex items-center justify-center"></div>
           }
           <div className="flex-1 ml-7">
-            <p className="mb-3 text-2xl font-semibold text-left">{name}</p>
+            <p className="mb-3 text-2xl font-semibold text-left">{user?.name}</p>
             <input
               type="file"
               ref={fileInputRef}
@@ -105,7 +109,7 @@ const ProfileView = () => {
             <p className="text-[18px]">User Name</p>
             <input
               className="bg-[#000000] border border-[#FFFFFF]/20 rounded-lg font-semibold placeholder:text-[#E2E2E2] w-full py-3 px-[18px]"
-              placeholder="John Doe"
+              placeholder={`${user?.name}`}
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -117,7 +121,7 @@ const ProfileView = () => {
               <input
                 type="text"
                 className="bg-[#000000] border border-[#FFFFFF]/20 rounded-lg font-semibold placeholder:text-[#E2E2E2] w-full py-3 px-[18px]"
-                value={referralCode}
+                value={user?.inviteCode}
                 disabled
               />
               <CopyToClipboard text={referralCode} onCopy={handleCopyClick}>

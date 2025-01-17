@@ -26,7 +26,7 @@ const ChatArea = () => {
           <UserPrompt prompt={chat.prompt} />
           <div className="flex justify-start px-8">
             <img src="/chat_logo.svg" alt="chat loading" className={`${loadingIndex === id ? 'rotate' : ''} w-8`} />
-            <p className="text-2xl">{loadingIndex === id ? "Edith is thinking..." : "Answer"}</p>
+            <p className="text-2xl pl-4">{loadingIndex === id ? "Edith is thinking..." : "Answer"}</p>
           </div>
           {(chat.response !== null) && <Response response={chat.response} timestamp={chat.timestamp} />}
         </div>

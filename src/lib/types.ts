@@ -1,8 +1,8 @@
 export interface User {
-  id: string;
-  destination: string;
   name: string;
   avatar: string;
+  destination?: string;
+  inviteCode?: string;
 }
 
 export interface LoginProps {
@@ -27,6 +27,7 @@ export interface AuthContextType {
   signup: (data: RegisterProps) => Promise<any>;
   handleSocialLogin: (provider: 'google' | 'twitter') => void;
   user: User | null;
+  setUser: (user: User | null) => void;
   getUser: (token: string) => Promise<any>;
   logout: () => void;
 } 
