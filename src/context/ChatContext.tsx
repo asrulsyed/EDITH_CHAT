@@ -27,8 +27,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       }
     ]);
 
-    const currentIndex = chatLog.length;
-    setLoadingIndex(currentIndex);
+    setLoadingIndex(chatLog.length);
 
     try {
       const requestBody = sessionId
@@ -39,7 +38,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         `${import.meta.env.VITE_BACKEND_URL}/api/chat`,
         requestBody
       );
-
+      console.log("res", res);
       // Handle different response statuses
       if (res.status === 200) {
         setChatLog((prevChatLog) => {
@@ -57,29 +56,26 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         return res; // Return full response object
       } else {
         // Handle non-200 status codes
-        if (res.status === 429) {
-          toast({
-            variant: "destructive",
-            title: "You have reached the maximum number of requests. Please try again later.",
-          });
-        } else {
-          toast({
-            variant: "destructive",
-            title: "Error generating response",
-          });
-        }
-        return res;
+        throw new Error("Failed to get valid reponse");
       }
     } catch (err: any) {
-      console.error("Error fetching response from EDITH", err);
-      const errorMessage = err.response?.status === 429
-        ? "Too many requests. Please wait a moment before trying again."
-        : "Error generating response";
+      console.error("Chat Error:", err);
+      let errorMessage = "An unexpected error occurred";
+
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 429) {
+          errorMessage = "Too many requests. Please wait a moment before trying again.";
+        } else {
+          errorMessage = "Failed to get response from server";
+        }
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
 
       toast({
         variant: "destructive",
         title: "Error fetching response from EDITH",
-        description: `${err}`,
+        description: `${errorMessage}`,
       });
 
       setChatLog((prevChatLog) => {
@@ -93,7 +89,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         };
         return updatedLog;
       });
-      return err.response;
+      throw err;
     } finally {
       setLoadingIndex(null);
     }
