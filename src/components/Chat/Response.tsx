@@ -59,7 +59,7 @@ const Response = ({ response, timestamp }: { response: string, timestamp: string
 
   return (
     <div className="flex flex-col gap-4 text-mainFont">
-      <div className="overflow-x-auto text-justify break-words whitespace-pre-wrap p-8">
+      <div className="overflow-x-auto text-justify break-words whitespace-pre-wrap px-8">
         {splitResponse(response).map((part, index) => (
           <React.Fragment key={index}>
             {part.type === "text" && (

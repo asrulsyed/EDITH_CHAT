@@ -210,14 +210,18 @@ const SignIn = () => {
             variant="contained"
             fullWidth
             disabled={isLoading.google}
-            onClick={() => handleSocialLogin('google')}
+            onClick={() => {
+              setIsLoading(prev => ({ ...prev, google: true }));
+              handleSocialLogin('google')
+              setIsLoading(prev => ({ ...prev, google: false }));
+            }}
             className="!bg-[#FAFAFA]/80 hover:!bg-[#FFFFFF] h-10 disabled:!bg-[#FAFAFA]/80 !text-[#000000] !text-sm"
           >
             {isLoading.google ? (
               <>
                 <span className="flex items-center gap-2">
                   <img src="/google.png" className="w-6 h-6" />
-                  Login With Google...
+                  Continue with Google...
                   <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24">
                     <circle
                       className="opacity-25"
@@ -239,7 +243,7 @@ const SignIn = () => {
             ) : (
               <span className="flex items-center gap-2">
                 <img src="/google.png" className="w-6 h-6" />
-                Login With Google
+                Continue with Google
               </span>
             )}
           </Button>
@@ -248,14 +252,18 @@ const SignIn = () => {
             variant="contained"
             fullWidth
             disabled={isLoading.twitter}
-            onClick={() => handleSocialLogin('twitter')}
+            onClick={() => {
+              setIsLoading(prev => ({ ...prev, twitter: true }));
+              handleSocialLogin('twitter')
+              setIsLoading(prev => ({ ...prev, twitter: false }))
+            }}
             className="!bg-[#FAFAFA]/80 hover:!bg-[#FFFFFF] h-10 disabled:!bg-[#FAFAFA]/80 !text-[#000000] !text-sm"
           >
             {isLoading.twitter ? (
               <>
                 <span className="flex items-center gap-2">
                   <img src="/twitter.png" className="w-6 h-6" />
-                  Login With Twitter...
+                  Continue with Twitter...
                   <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24">
                     <circle
                       className="opacity-25"
@@ -277,7 +285,7 @@ const SignIn = () => {
             ) : (
               <span className="flex items-center gap-2">
                 <img src="/twitter.png" className="w-6 h-6" />
-                Login With Twitter
+                Continue with Twitter
               </span>
             )}
           </Button>

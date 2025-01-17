@@ -24,7 +24,10 @@ const ChatArea = () => {
       {chatLog.map((chat: Chat, id: number) => (
         <div key={id} className="flex flex-col w-full gap-6">
           <UserPrompt prompt={chat.prompt} />
-          <img src="/chat_logo.svg" alt="chat loading" className={`${loadingIndex === id ? 'rotate' : ''} w-5`} />
+          <div className="flex justify-start px-8">
+            <img src="/chat_logo.svg" alt="chat loading" className={`${loadingIndex === id ? 'rotate' : ''} w-8`} />
+            <p className="text-2xl">{loadingIndex === id ? "Edith is thinking..." : "Answer"}</p>
+          </div>
           {(chat.response !== null) && <Response response={chat.response} timestamp={chat.timestamp} />}
         </div>
       ))}
