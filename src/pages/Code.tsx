@@ -36,16 +36,16 @@ const Code = () => {
   const onSubmit = async (code: CodeProps) => {
     setIsLoading(true);
     try {
-      const res = await axios.post<ApiResponse<void>>(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/verify-code`,
         code
       );
-      if (res.data.success) {
-        setLogined(true);
-        navigate("/chat/text");
-      } else {
-        throw new AuthError(res.data.message || "Verification failed");
-      }
+      // if (res.data.success) {
+      //   setLogined(true);
+      //   navigate("/chat/text");
+      // } else {
+      //   throw new AuthError(res.data.message || "Verification failed");
+      // }
     } catch (error) {
       if (error instanceof AuthError) {
         toast({
