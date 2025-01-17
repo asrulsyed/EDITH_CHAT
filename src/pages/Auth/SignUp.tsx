@@ -5,7 +5,7 @@ import { MailOutline, PersonOutline } from "@mui/icons-material";
 import {
   Box,
   Button,
-  Divider,
+  // Divider,
   FormControl,
   InputAdornment,
   InputLabel,
@@ -30,7 +30,7 @@ const SignUp = () => {
   })
 
   const navigate = useNavigate();
-  const { signup, handleSocialLogin } = useAuth();
+  const { signup } = useAuth();
 
   const onSubmit = async (data: RegisterProps) => {
     setIsLoading(prev => ({ ...prev, form: true }));
@@ -233,7 +233,7 @@ const SignUp = () => {
             )}
           </Button>
         </form>
-        <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+        {/* <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
           <Divider
             sx={{
               flex: 1,
@@ -257,12 +257,12 @@ const SignUp = () => {
               },
             }}
           />
-        </Box>
+        </Box> */}
 
         {/* Social login */}
-        <div className="space-y-6">
+        {/* <div className="space-y-6"> */}
           {/* Google login */}
-          <Button
+          {/* <Button
             variant="contained"
             fullWidth
             disabled={isLoading.google}
@@ -302,9 +302,9 @@ const SignUp = () => {
                 Continue with Google
               </span>
             )}
-          </Button>
+          </Button> */}
           {/* Twitter login */}
-          <Button
+          {/* <Button
             variant="contained"
             fullWidth
             disabled={isLoading.twitter}
@@ -345,7 +345,7 @@ const SignUp = () => {
               </span>
             )}
           </Button>
-        </div>
+        </div> */}
 
         {/* Navigate sign in if you already have an account */}
         <Typography
