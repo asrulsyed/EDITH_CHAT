@@ -1,4 +1,4 @@
-// import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { AuthError } from "@/lib/types";
 import {
@@ -26,7 +26,7 @@ const Code = () => {
     formState: { errors },
   } = useForm<CodeProps>();
 
-  // const { setLogined } = useAuth();
+  const { setLogined } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
@@ -36,16 +36,17 @@ const Code = () => {
   const onSubmit = async (code: CodeProps) => {
     setIsLoading(true);
     try {
-      await axios.post(
+      const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/verify-code`,
         code
       );
-      // if (res.data.success) {
-      //   setLogined(true);
-      //   navigate("/chat/text");
-      // } else {
-      //   throw new AuthError(res.data.message || "Verification failed");
-      // }
+      console.log("res", res);
+      if (res.status === 201) {
+        setLogined(true);
+        navigate("/chat/text");
+      } else {
+        throw new AuthError(res.data.message || "Verification failed");
+      }
     } catch (error) {
       if (error instanceof AuthError) {
         toast({
