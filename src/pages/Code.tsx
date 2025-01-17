@@ -1,5 +1,6 @@
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { ApiResponse, AuthError } from "@/lib/types";
 import {
   Box,
   Button,
@@ -36,27 +37,33 @@ const Code = () => {
   const onSubmit = async (code: CodeProps) => {
     setIsLoading(true);
     try {
-      const res = await axios.post(
+      const res = await axios.post<ApiResponse<void>>(
         `${import.meta.env.VITE_BACKEND_URL}/auth/verify-code`,
         code
       );
-      console.log("res", res);
-      setLogined(true);
-      navigate("/chat/text");
+      if (res.data.success) {
+        setLogined(true);
+        navigate("/chat/text");
+      } else {
+        throw new AuthError(res.data.message || "Verification failed");
+      }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errorMessage = error.response?.data?.message || 'Invalid verification code';
+      if (error instanceof AuthError) {
         toast({
           variant: "destructive",
-          description: errorMessage,
+          description: error.message,
+        });
+      } else if (axios.isAxiosError(error)) {
+        toast({
+          variant: "destructive",
+          description: error.response?.data?.message || "Invalid verification code",
         });
       } else {
         toast({
           variant: "destructive",
-          description: "An unexpected error occurred. Please try again.",
+          description: "An unexpected error occurred",
         });
       }
-      console.error("Verification error:", error);
     } finally {
       setIsLoading(false);
     }

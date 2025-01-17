@@ -1,5 +1,6 @@
 import { useAuth } from "@/context/AuthContext";
-import { LoginProps } from "@/lib/types";
+import { toast } from "@/hooks/use-toast";
+import { AuthError, LoginProps } from "@/lib/types";
 import { MailOutline } from "@mui/icons-material";
 import {
   Box,
@@ -32,13 +33,23 @@ const SignIn = () => {
 
   const onSubmit = async (data: LoginProps) => {
     setIsLoading(prev => ({ ...prev, form: true }));
+
     try {
-      const res = await login(data);
-      if (res === true) {
+      const success = await login(data.email);
+
+      if (success) {
         navigate("/auth/verify")
+        toast({
+          title: "Check your email",
+          description: "We've sent you a magic link to sign in"
+        })
       }
     } catch (error) {
-      console.error("Login error:", error);
+      toast({
+        variant: "destructive",
+        title: "Login error",
+        description: error instanceof AuthError ? error.message : "An unexpected error occurred"
+      })
     } finally {
       setIsLoading(prev => ({ ...prev, form: false }));
     }

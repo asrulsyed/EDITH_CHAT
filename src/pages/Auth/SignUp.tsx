@@ -1,5 +1,6 @@
 import { useAuth } from "@/context/AuthContext";
-  import { RegisterProps } from "@/lib/types";
+import { toast } from "@/hooks/use-toast";
+  import { AuthError, RegisterProps } from "@/lib/types";
 import { MailOutline, PersonOutline } from "@mui/icons-material";
 import {
   Box,
@@ -34,12 +35,29 @@ const SignUp = () => {
   const onSubmit = async (data: RegisterProps) => {
     setIsLoading(prev => ({ ...prev, form: true }));
     try {
-      const res = await signup(data);
-      if (res === true) {
+      const success = await signup(data);
+      if (success) {
         navigate("/auth/verify");
+        toast({
+          variant: "default",
+          title: "Verification email sent!",
+          description: "Please check your inbox."
+        })
       }
     } catch (error) {
-      console.error("Registration error:", error);
+      if (error instanceof AuthError) {
+        toast({
+          variant: "destructive",
+          title: "Registration error",
+          description: error.message
+        })
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Registration error",
+          description: "An unexpected error occurred"
+        })
+      }
     } finally {
       setIsLoading(prev => ({ ...prev, form: false }));
     }

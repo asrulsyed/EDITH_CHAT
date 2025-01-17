@@ -1,30 +1,29 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { AuthContextType, LoginProps, RegisterProps, User } from "@/lib/types";
+import { ApiResponse, AuthContextType, AuthError, RegisterProps, User } from "@/lib/types";
 import axios from "axios";
-import { useToast } from "@/hooks/use-toast";
-import { jwtDecode } from "jwt-decode";
-import Cookies from "js-cookie";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { toast } = useToast();
-
   const [verifyCode, setVerifyCode] = useState<string | null>("");
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [logined, setLogined] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const token = localStorage.getItem("EDITH_TOKEN");
+    if (logined) {
+      if (token) {
+        axios.defaults.headers.common['token'] = token;
+      }
+      fetchUserData()
+    } else if (token) {
       axios.defaults.headers.common['token'] = token;
-      setIsAuthenticated(true);
-      fetchUserData(token);
+      setLogined(true);
+      fetchUserData()
     }
-  }, []);
+  }, [logined]);
 
-  const fetchUserData = async (token: string) => {
+  const fetchUserData = async () => {
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/auth/profile`,
@@ -36,32 +35,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }
 
-  const login = async (data: LoginProps) => {
+  const login = async (email: string): Promise<boolean> => {
     try {
-      const res = await axios.post(
+      const res = await axios.post<ApiResponse<void>>(
         `${import.meta.env.VITE_BACKEND_URL}/auth/magic-link`,
-        {
-          destination: data.email,
-        }
+        { destination: email }
       );
-      if (res.data.success === true) {
-        localStorage.setItem("EDITH_EMAIL", data.email);
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Login Failed",
-          description: "Please register your account before log in"
-        });
+      if (res.data.success) {
+        localStorage.setItem("EDITH_EMAIL", email);
+        return true;
       }
-      return res.data.success
+
+      throw new AuthError(res.data.message || "Login failed. Please try again.");
+
     } catch (error) {
-      console.error("Login error:", error);
-      toast({
-        variant: "destructive",
-        title: "Login error:",
-        description: (error as Error).message,
-      });
-      throw error;
+      if (error instanceof AuthError) {
+        throw error;
+      }
+
+      if (axios.isAxiosError(error)) {
+        throw new AuthError(error.response?.data?.message || "Network error occurred");
+      }
+
+      throw new AuthError("An unexpected error occurred");
+
     }
   }
 
@@ -69,46 +66,39 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/${provider}`
   };
 
-  const signup = async (data: RegisterProps) => {
+  const signup = async (data: RegisterProps): Promise<boolean> => {
     try {
-      const res = await axios.post(
+      const res = await axios.post<ApiResponse<void>>(
         `${import.meta.env.VITE_BACKEND_URL}/auth/magic-link`,
         {
           name: data.name,
           destination: data.email
         }
       );
-      if (res.data.success === true) {
+      if (res.data.success) {
         localStorage.removeItem("EDITH_EMAIL");
         localStorage.setItem("EDITH_EMAIL", data.email);
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Registration Failed",
-          description: "Please try again"
-        })
-      }
-      return res.data.success
+        return true;
+      } 
+
+      throw new AuthError(res.data.message || "Registration failed. Please try again.");
+
     } catch (error) {
-      console.error("Registration error:", error);
-      toast({
-        variant: "destructive",
-        title: "Registration error:",
-        description: (error as Error).message,
-      })
-      throw error;
+      if (error instanceof AuthError) {
+        throw error;
+      }
+
+      if (axios.isAxiosError(error)) {
+        throw new AuthError(error.response?.data?.message || "Network error occurred");
+      }
+
+      throw new AuthError("An unexpected error occurred");
     }
   }
 
-  const getUser = async (token: string) => {
-    const decoded = jwtDecode<User>(token);
-    setUser(decoded);
-  }
-
   const logout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("EDITH_TOKEN");
     delete axios.defaults.headers.common['token'];
-    setIsAuthenticated(false);
     setUser(null);
     setLogined(false);
   }
@@ -117,7 +107,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         verifyCode,
-        isAuthenticated,
         logined,
         setVerifyCode,
         setLogined,
@@ -126,7 +115,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         handleSocialLogin,
         user,
         setUser,
-        getUser,
         logout
       }}
     >

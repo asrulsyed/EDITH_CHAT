@@ -7,32 +7,41 @@ import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Text = () => {
-  const { setLogined, logined } = useAuth();
+  const { logined, setLogined } = useAuth();
   const { isStartChat, setToken } = useChat();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const sendToken = async (token: string | null) => {
-      setToken(token);
+    const validateTokenAndRedirect = async (token: string | null, email: string | null) => {
+      if (!token || !email) {
+        navigate("/auth/login");
+        return;
+      }
+
+      try {
+        const decoded = jwtDecode<{ destination: string }>(token);
+
+        if (decoded.destination === email) {
+          setToken(token);
+          setLogined(true);
+          navigate("/chat/text");
+        } else {
+          navigate("/auth/login");
+        }
+      } catch (error) {
+        console.error("Token validation error:", error);
+        navigate("/auth/login");
+      }
     }
 
     if (!logined) {
-
       const token = searchParams.get('token');
-      const email = localStorage.getItem("EDITH_EMAIL");
-      if (token && email) {
-        const decoded = jwtDecode<{ destination: string }>(token);
-        if (decoded.destination === email) {
-          sendToken(token);
-          setLogined(true);
-        } else {
-
-          navigate("/auth/login")
-        }
-      } else {
-        navigate("/auth/login")
+      if (token) {
+        localStorage.setItem("EDITH_TOKEN", token);
       }
+      const email = localStorage.getItem("EDITH_EMAIL");
+      validateTokenAndRedirect(token, email);
     }
   }, [])
 

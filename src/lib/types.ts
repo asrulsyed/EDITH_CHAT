@@ -9,6 +9,19 @@ export interface LoginProps {
   email: string;
 }
 
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  message?: string;
+}
+
+export class AuthError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthError";
+  }
+}
+
 export interface RegisterProps {
   name: string;
   email: string;
@@ -20,16 +33,14 @@ export interface InviteProps {
 
 export interface AuthContextType {
   verifyCode: string | null;
-  isAuthenticated: boolean;
   logined: boolean;
   setVerifyCode: (code: string | null) => void;
   setLogined: (logined: boolean) => void;
-  login: (data: LoginProps) => Promise<any>;
+  login: (email: string) => Promise<boolean>;
   signup: (data: RegisterProps) => Promise<any>;
   handleSocialLogin: (provider: 'google' | 'twitter') => void;
   user: User | null;
   setUser: (user: User | null) => void;
-  getUser: (token: string) => Promise<any>;
   logout: () => void;
 } 
 
