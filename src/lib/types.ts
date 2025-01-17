@@ -1,7 +1,7 @@
 export interface User {
   name: string;
   avatar: string;
-  destination?: string;
+  email?: string;
   inviteCode?: string;
 }
 

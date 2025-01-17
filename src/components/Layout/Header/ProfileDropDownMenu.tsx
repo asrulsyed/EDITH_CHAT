@@ -35,7 +35,7 @@ const { logout, user } = useAuth();
         <div className="h-[46px] w-[46px] rounded-full bg-gradient-to-br from-[#7D2DFF] to-[#41DDFF] flex items-center justify-center"></div>
           <div className="ml-2.5 flex-1">
             <p className="text-base font-semibold">{user?.name}</p>
-            <p className="text-base font-normal text-[#FFFFFF]/80">{user?.destination}</p>
+            <p className="text-base font-normal text-[#FFFFFF]/80">{user?.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-[#FFFFFF]/10 my-4" />

@@ -23,7 +23,7 @@ const Text = () => {
       const email = localStorage.getItem("EDITH_EMAIL");
       if (token && email) {
         const decoded = jwtDecode<User>(token);
-        if (decoded.destination === email) {
+        if (decoded.email === email) {
           sendToken(token);
           setLogined(true);
         } else {

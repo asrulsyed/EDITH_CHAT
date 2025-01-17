@@ -57,7 +57,7 @@ const Code = () => {
     if (token) {
       const decoded = jwtDecode<User>(token);
       const email = localStorage.getItem("EDITH_EMAIL");
-      if (decoded.destination !== email) {
+      if (decoded.email !== email) {
         navigate('/auth/login')
       }
     } else {
