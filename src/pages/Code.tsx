@@ -1,6 +1,6 @@
-import { useAuth } from "@/context/AuthContext";
+// import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
-import { ApiResponse, AuthError } from "@/lib/types";
+import { AuthError } from "@/lib/types";
 import {
   Box,
   Button,
@@ -26,7 +26,7 @@ const Code = () => {
     formState: { errors },
   } = useForm<CodeProps>();
 
-  const { setLogined } = useAuth();
+  // const { setLogined } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
