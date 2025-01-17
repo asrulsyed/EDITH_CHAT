@@ -41,9 +41,9 @@ const Code = () => {
         code
       );
       console.log("res", res);
-      if (res.status === 201) {
+      if (res.status === 200) {
         setLogined(true);
-        navigate("/chat/text");
+        navigate(`/chat/text?token=${res.data.token}`);
       } else {
         throw new AuthError(res.data.message || "Verification failed");
       }
