@@ -71,14 +71,14 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         return res;
       }
     } catch (err: any) {
-      console.error("Error fetching response from OpenAI", err);
+      console.error("Error fetching response from EDITH", err);
       const errorMessage = err.response?.status === 429
         ? "Too many requests. Please wait a moment before trying again."
         : "Error generating response";
 
       toast({
         variant: "destructive",
-        title: "Error fetching response from OpenAI",
+        title: "Error fetching response from EDITH",
         description: `${err}`,
       });
 
