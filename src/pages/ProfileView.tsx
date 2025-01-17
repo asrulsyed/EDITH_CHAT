@@ -25,15 +25,72 @@ const ProfileView = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          // Reduced maximum dimensions
+          const MAX_SIZE = 200; // Reduced from 500 to 200
+          if (width > height) {
+            if (width > MAX_SIZE) {
+              height = Math.round((height * MAX_SIZE) / width);
+              width = MAX_SIZE;
+            }
+          } else {
+            if (height > MAX_SIZE) {
+              width = Math.round((width * MAX_SIZE) / height);
+              height = MAX_SIZE;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          // More aggressive compression
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.3); // Reduced quality to 30%
+          
+          // Remove the data URL prefix to save some bytes
+          const base64Data = compressedBase64.split(',')[1];
+          resolve(base64Data);
+        };
+        img.src = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        setAvatar(base64String);
+      try {
+        // Add size check
+        if (file.size > 5000000) { // 5MB
+          toast({
+            variant: "destructive",
+            title: "File too large",
+            description: "Please select an image under 5MB"
+          });
+          return;
+        }
+        
+        const compressedBase64 = await compressImage(file);
+        setAvatar('data:image/jpeg;base64,' + compressedBase64); // Add prefix back for display
+      } catch (error) {
+        console.error('Error compressing image:', error);
+        toast({
+          variant: "destructive",
+          title: "Error processing image",
+        });
       }
-      reader.readAsDataURL(file);
     }
   };
 

@@ -11,38 +11,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { toast } = useToast();
 
   const [verifyCode, setVerifyCode] = useState<string | null>("");
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [logined, setLogined] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/profile`
-          
-        )
-        console.log("aaa", res);
-        setUser(res.data)
-      } catch (err) {
-        console.error(err);
-      }
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.defaults.headers.common['token'] = token;
+      setIsAuthenticated(true);
+      fetchUserData(token);
     }
-    fetchProfile();
-    // const verifyToken = async () => {
-    //   try {
-    //     const res = await axios.post(
-    //       `${import.meta.env.VITE_BACKEND_URL}/auth/verify-token`
-    //     );
+  }, []);
 
-    //     if (res.status === 200) {
-    //       setLogined(true);
-    //     }
-
-    //   } catch (err) {
-
-    //   }
-    // }
-  }, [logined]);
+  const fetchUserData = async (token: string) => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/profile`,
+      )
+      setUser(res.data);
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+      logout();
+    }
+  }
 
   const login = async (data: LoginProps) => {
     try {
@@ -114,7 +106,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const logout = () => {
-    Cookies.remove('token');
+    localStorage.removeItem("token");
+    delete axios.defaults.headers.common['token'];
+    setIsAuthenticated(false);
     setUser(null);
     setLogined(false);
   }
@@ -123,6 +117,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         verifyCode,
+        isAuthenticated,
         logined,
         setVerifyCode,
         setLogined,

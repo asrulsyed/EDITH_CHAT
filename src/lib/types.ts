@@ -20,6 +20,7 @@ export interface InviteProps {
 
 export interface AuthContextType {
   verifyCode: string | null;
+  isAuthenticated: boolean;
   logined: boolean;
   setVerifyCode: (code: string | null) => void;
   setLogined: (logined: boolean) => void;

@@ -44,28 +44,6 @@ const SignIn = () => {
     }
   };
 
-  // const verifyToken = async (token: string) => {
-  //   try {
-  //     const res = await axios.post(
-  //       `${import.meta.env.VITE_BACKEND_URL}/auth/verify-token`,
-  //       { token }
-  //     );
-
-  //     if (res.status === 200) {
-  //       setLogined(true);
-  //       navigate("/chat/");
-  //     } else {
-  //       throw new Error("Wrong Token!");
-  //     }
-  //   } catch {
-  //     localStorage.removeItem("EDITH_token");
-  //     toast({
-  //       variant: "destructive",
-  //       title: "Wrong Token!",
-  //     });
-  //   }
-  // };
-
   return (
     <Box className="flex flex-col items-center justify-center min-h-screen bg-[#000000] font-Sofia text-[#E2E2E2]">
       {/* logo */}
