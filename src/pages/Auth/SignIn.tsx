@@ -221,7 +221,7 @@ const SignIn = () => {
               <>
                 <span className="flex items-center gap-2">
                   <img src="/google.png" className="w-6 h-6" />
-                  Continue with Google...
+                  Sign in with Google...
                   <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24">
                     <circle
                       className="opacity-25"
@@ -243,7 +243,7 @@ const SignIn = () => {
             ) : (
               <span className="flex items-center gap-2">
                 <img src="/google.png" className="w-6 h-6" />
-                Continue with Google
+                Sign in with Google
               </span>
             )}
           </Button>
@@ -263,7 +263,7 @@ const SignIn = () => {
               <>
                 <span className="flex items-center gap-2">
                   <img src="/twitter.png" className="w-6 h-6" />
-                  Continue with Twitter...
+                  Sign in with Twitter...
                   <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24">
                     <circle
                       className="opacity-25"
@@ -285,7 +285,7 @@ const SignIn = () => {
             ) : (
               <span className="flex items-center gap-2">
                 <img src="/twitter.png" className="w-6 h-6" />
-                Continue with Twitter
+                Sign in with Twitter
               </span>
             )}
           </Button>
