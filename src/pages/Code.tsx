@@ -1,6 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
-import { User } from "@/lib/types";
 import {
   Box,
   Button,
@@ -55,9 +54,9 @@ const Code = () => {
 
   useEffect(() => {
     if (token) {
-      const decoded = jwtDecode<User>(token);
+      const decoded = jwtDecode<{ destination: string }>(token);
       const email = localStorage.getItem("EDITH_EMAIL");
-      if (decoded.email !== email) {
+      if (decoded.destination !== email) {
         navigate('/auth/login')
       }
     } else {

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { MdCheck, MdOutlineContentCopy } from "react-icons/md";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import axios from "axios";
@@ -15,6 +15,7 @@ const ProfileView = () => {
   const [name, setName] = useState<string>(user?.name || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
   const handleCopyClick = () => {
     setCopyStatus(true);
     setTimeout(() => setCopyStatus(false), 2000);
@@ -60,22 +61,9 @@ const ProfileView = () => {
     navigate(-1);
   }
 
-  // useEffect(() => {
-  //   const fetchInviteCode = async () => {
-  //     try {
-  //       const res = await axios.get(
-  //         `${import.meta.env.VITE_BACKEND_URL}/auth/profile`
-          
-  //       )
-  //       setReferralCode(res.data.inviteCode)
-  //       setName(res.data.name)
-  //       setAvatar(res.data.avatar);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   }
-  //   fetchInviteCode();
-  // }, []);
+  useEffect(() => {
+    console.log("user", user);
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#000000] font-Sofia text-[#E2E2E2]">
@@ -83,8 +71,8 @@ const ProfileView = () => {
         <h1 className="text-2xl font-medium text-left font-Sofia text-[#FFFFFF] ml-1">Profile</h1>
         <div className="flex items-center justify-between">
           {
-            user?.avatar
-              ? <img src={user.avatar} alt="Profile" className="h-[90px] w-[90px] rounded-full object-cover" />
+            avatar
+              ? <img src={avatar} alt="Profile" className="h-[90px] w-[90px] rounded-full object-cover" />
               : <div className="h-[90px] w-[90px] rounded-full bg-gradient-to-br from-[#7D2DFF] to-[#41DDFF] flex items-center justify-center"></div>
           }
           <div className="flex-1 ml-7">

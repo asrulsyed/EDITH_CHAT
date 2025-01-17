@@ -11,7 +11,7 @@ import { FiLogOut, FiSettings } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 const ProfileDropDownMenu = () => {
-const { logout, user } = useAuth();
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
 
   const handleSetting = () => {
@@ -24,15 +24,27 @@ const { logout, user } = useAuth();
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="p-0 transition-all duration-200 ease-in border-none rounded-full hover:scale-105 focus:outline-none">
-        <div className="h-[46px] w-[46px] rounded-full bg-gradient-to-br from-[#7D2DFF] to-[#41DDFF] flex items-center justify-center"></div>
+      <DropdownMenuTrigger className="p-0 transition-all duration-200 ease-in border-none rounded-full hover:scale-105 focus:outline-none bg-transparent">
+        {
+          user?.avatar ? (
+            <img src={user?.avatar} alt="avatar" className="h-[60px] w-[60px] rounded-full" />
+          ) : (
+            <div className="h-[60px] w-[60px] rounded-full bg-gradient-to-br from-[#7D2DFF] to-[#41DDFF] flex items-center justify-center"></div>
+          )
+        }
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="bg-[#000000] mt-[14px] w-[300px] border-[#FFFFFF]/10 border p-5 rounded-lg text-[#E2E2E2] text-base font-semibold font-Sofia"
         align="end"
       >
         <DropdownMenuLabel className="flex items-center justify-between">
-        <div className="h-[46px] w-[46px] rounded-full bg-gradient-to-br from-[#7D2DFF] to-[#41DDFF] flex items-center justify-center"></div>
+        {
+          user?.avatar ? (
+            <img src={user?.avatar} alt="avatar" className="h-[60px] w-[60px] rounded-full" />
+          ) : (
+            <div className="h-[60px] w-[60px] rounded-full bg-gradient-to-br from-[#7D2DFF] to-[#41DDFF] flex items-center justify-center"></div>
+          )
+        }
           <div className="ml-2.5 flex-1">
             <p className="text-base font-semibold">{user?.name}</p>
             <p className="text-base font-normal text-[#FFFFFF]/80">{user?.email}</p>

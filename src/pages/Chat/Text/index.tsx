@@ -2,7 +2,6 @@ import ChatArea from "@/components/Chat/ChatArea";
 import InputBox from "@/components/InputBox";
 import { useAuth } from "@/context/AuthContext";
 import { useChat } from "@/context/ChatContext";
-import { User } from "@/lib/types";
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -19,11 +18,12 @@ const Text = () => {
     }
 
     if (!logined) {
+
       const token = searchParams.get('token');
       const email = localStorage.getItem("EDITH_EMAIL");
       if (token && email) {
-        const decoded = jwtDecode<User>(token);
-        if (decoded.email === email) {
+        const decoded = jwtDecode<{ destination: string }>(token);
+        if (decoded.destination === email) {
           sendToken(token);
           setLogined(true);
         } else {
