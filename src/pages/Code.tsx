@@ -35,10 +35,11 @@ const Code = () => {
   const onSubmit = async (code: CodeProps) => {
     setIsLoading(true);
     try {
-      await axios.post(
+      const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/verify-code`,
         code
       );
+      console.log("res", res);
       setLogined(true);
       navigate("/chat/text");
     } catch (error) {
