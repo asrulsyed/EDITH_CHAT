@@ -42,8 +42,6 @@ const Code = () => {
       );
       console.log("res", res);
       if (res.status === 200) {
-        setLogined(true);
-        localStorage.setItem("EDITH_TOKEN", res.data);
         navigate(`/chat/text?token=${res.data}`);
       } else {
         throw new AuthError(res.data.message || "Verification failed");

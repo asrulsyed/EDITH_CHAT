@@ -33,6 +33,7 @@ const Text = () => {
             localStorage.setItem("EDITH_TOKEN", token);
             setToken(token);
             setLogined(true);
+            navigate("/chat/text");
           } else {
             toast({
               variant: "destructive",
