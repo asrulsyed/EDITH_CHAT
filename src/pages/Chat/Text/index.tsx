@@ -2,46 +2,55 @@ import ChatArea from "@/components/Chat/ChatArea";
 import InputBox from "@/components/InputBox";
 import { useAuth } from "@/context/AuthContext";
 import { useChat } from "@/context/ChatContext";
+import { useToast } from "@/hooks/use-toast";
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Text = () => {
   const { logined, setLogined } = useAuth();
+  const {toast} = useToast();
   const { isStartChat, setToken } = useChat();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const validateTokenAndRedirect = async (token: string | null, email: string | null) => {
-      if (!token || !email) {
+    if (!logined) {
+      const token = searchParams.get('token');
+      if (!token) {
+        toast({
+          variant: "destructive",
+          description: "You need to login first",
+        })
         navigate("/auth/login");
         return;
       }
-
       try {
         const decoded = jwtDecode<{ destination: string }>(token);
 
-        if (decoded.destination === email) {
-          setToken(token);
-          setLogined(true);
-          navigate("/chat/text");
+        if (decoded.destination) {
+          if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(decoded.destination)) {
+            localStorage.setItem("token", token);
+            setToken(token);
+            setLogined(true);
+          } else {
+            toast({
+              variant: "destructive",
+              description: "Invalid email address",
+            })
+            navigate("/auth/login");
+          }
         } else {
+          toast({
+            variant: "destructive",
+            description: "Invalid token",
+          })
           navigate("/auth/login");
         }
       } catch (error) {
         console.error("Token validation error:", error);
         navigate("/auth/login");
       }
-    }
-
-    if (!logined) {
-      const token = searchParams.get('token');
-      if (token) {
-        localStorage.setItem("EDITH_TOKEN", token);
-      }
-      const email = localStorage.getItem("EDITH_EMAIL");
-      validateTokenAndRedirect(token, email);
     }
   }, [])
 

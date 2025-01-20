@@ -72,11 +72,28 @@ const Code = () => {
   useEffect(() => {
     if (token) {
       const decoded = jwtDecode<{ destination: string }>(token);
-      const email = localStorage.getItem("EDITH_EMAIL");
-      if (decoded.destination !== email) {
+      if (decoded.destination) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(decoded.destination)) {
+          toast({
+            variant: "destructive",
+            description: "Invalid email address",
+          });
+          navigate('/auth/login')
+        } else {
+          localStorage.setItem("EDITH_TOKEN", token);
+        }
+      } else {
+        toast({
+          variant: "destructive",
+          description: "Invalid token",
+        });
         navigate('/auth/login')
       }
     } else {
+      toast({
+        variant: "destructive",
+        description: "No token found",
+      });
       navigate('/auth/login')
     }
   }, [])

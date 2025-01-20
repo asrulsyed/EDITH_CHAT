@@ -42,7 +42,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         { destination: email }
       );
       if (res.data.success) {
-        localStorage.setItem("EDITH_EMAIL", email);
         return true;
       }
 
@@ -76,8 +75,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
       );
       if (res.data.success) {
-        localStorage.removeItem("EDITH_EMAIL");
-        localStorage.setItem("EDITH_EMAIL", data.email);
         return true;
       } 
 
