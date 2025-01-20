@@ -29,7 +29,9 @@ const History = () => {
   useEffect(() => {
     const fetchChats = async () => {
       setIsLoading(true);
-      await showChats(sessionId);
+      if (sessionId !== null) {
+        await showChats(sessionId);
+      }
       setIsLoading(false);
     };
     fetchChats();
