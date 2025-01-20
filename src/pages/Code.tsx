@@ -26,7 +26,7 @@ const Code = () => {
     formState: { errors },
   } = useForm<CodeProps>();
 
-  const { setLogined } = useAuth();
+  // const { setLogined } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
