@@ -30,7 +30,7 @@ const Text = () => {
 
         if (decoded.destination) {
           if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(decoded.destination)) {
-            localStorage.setItem("token", token);
+            localStorage.setItem("EDITH_TOKEN", token);
             setToken(token);
             setLogined(true);
           } else {
