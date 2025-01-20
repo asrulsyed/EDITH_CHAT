@@ -17,6 +17,7 @@ const Text = () => {
   useEffect(() => {
     if (!logined) {
       const token = searchParams.get('token');
+      console.log("ajfiefiejfi", token)
       if (!token) {
         toast({
           variant: "destructive",
@@ -26,8 +27,9 @@ const Text = () => {
         return;
       }
       try {
+        console.log("token", token);
         const decoded = jwtDecode<{ destination: string }>(token);
-
+        console.log("decoded.destination", decoded.destination);
         if (decoded.destination) {
           if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(decoded.destination)) {
             localStorage.setItem("EDITH_TOKEN", token);

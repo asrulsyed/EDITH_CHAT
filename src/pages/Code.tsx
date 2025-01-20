@@ -1,4 +1,4 @@
-// import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { AuthError } from "@/lib/types";
 import {
@@ -26,7 +26,7 @@ const Code = () => {
     formState: { errors },
   } = useForm<CodeProps>();
 
-  // const { setLogined } = useAuth();
+  const { setLogined } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
@@ -40,22 +40,16 @@ const Code = () => {
         `${import.meta.env.VITE_BACKEND_URL}/auth/verify-code`,
         code
       );
-      console.log("res", res);
       if (res.status === 200) {
-        navigate(`/chat/text?token=${res.data}`);
+          navigate(`/chat/text?token=${token}`);
       } else {
         throw new AuthError(res.data.message || "Verification failed");
       }
     } catch (error) {
-      if (error instanceof AuthError) {
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
         toast({
           variant: "destructive",
-          description: error.message,
-        });
-      } else if (axios.isAxiosError(error)) {
-        toast({
-          variant: "destructive",
-          description: error.response?.data?.message || "Invalid verification code",
+          description: "Access forbidden - your token is expired",
         });
       } else {
         toast({
