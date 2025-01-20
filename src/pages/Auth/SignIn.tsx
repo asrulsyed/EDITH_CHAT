@@ -5,7 +5,7 @@ import { MailOutline } from "@mui/icons-material";
 import {
   Box,
   Button,
-  // Divider,
+  Divider,
   FormControl,
   InputAdornment,
   InputLabel,
@@ -29,7 +29,7 @@ const SignIn = () => {
     form: false,
   });
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, handleSocialLogin } = useAuth();
 
   const onSubmit = async (data: LoginProps) => {
     setIsLoading(prev => ({ ...prev, form: true }));
@@ -166,7 +166,7 @@ const SignIn = () => {
           </Button>
         </form>
 
-        {/* <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+        <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
           <Divider
             sx={{
               flex: 1,
@@ -190,12 +190,12 @@ const SignIn = () => {
               },
             }}
           />
-        </Box> */}
+        </Box>
 
         {/* Social login */}
-        {/* <div className="space-y-6"> */}
+        <div className="space-y-6">
           {/* Google login */}
-          {/* <Button
+          <Button
             variant="contained"
             fullWidth
             disabled={isLoading.google}
@@ -235,7 +235,7 @@ const SignIn = () => {
                 Sign in with Google
               </span>
             )}
-          </Button> */}
+          </Button>
           {/* Twitter login */}
           {/* <Button
             variant="contained"
@@ -277,8 +277,8 @@ const SignIn = () => {
                 Sign in with Twitter
               </span>
             )}
-          </Button>
-        </div> */}
+          </Button> */}
+        </div>
 
         {/* Navigate sign in if you already have an account */}
         <Typography variant="body2" className="mt-4 text-center">
