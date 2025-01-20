@@ -80,7 +80,7 @@ const Code = () => {
           });
           navigate('/auth/login')
         } else {
-          localStorage.setItem("EDITH_TOKEN", token);
+          // localStorage.setItem("EDITH_TOKEN", token);
         }
       } else {
         toast({
