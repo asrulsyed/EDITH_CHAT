@@ -43,7 +43,8 @@ const Code = () => {
       console.log("res", res);
       if (res.status === 200) {
         setLogined(true);
-        navigate(`/chat/text?token=${res.data.token}`);
+        localStorage.setItem("EDITH_TOKEN", res.data);
+        navigate(`/chat/text?token=${res.data}`);
       } else {
         throw new AuthError(res.data.message || "Verification failed");
       }
@@ -80,7 +81,6 @@ const Code = () => {
           });
           navigate('/auth/login')
         } else {
-          // localStorage.setItem("EDITH_TOKEN", token);
         }
       } else {
         toast({
